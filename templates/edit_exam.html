@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* 🔥 Premium Background */
+body {
+    background: linear-gradient(rgba(15,23,42,0.9), rgba(15,23,42,0.9)),
+                url('https://images.unsplash.com/photo-1492724441997-5dc865305da7');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Center Wrapper */
+.edit-wrapper {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* 🔥 Glass Card */
+.edit-card {
+    width: 100%;
+    max-width: 600px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+    padding: 50px;
+    transition: 0.4s ease;
+    color: white;
+}
+
+.edit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.8);
+}
+
+/* Title */
+.edit-title {
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* Form Styling */
+.edit-card p {
+    margin-bottom: 18px;
+}
+
+.edit-card label {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+/* Inputs */
+.edit-card input,
+.edit-card select,
+.edit-card textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.edit-card input:focus,
+.edit-card select:focus,
+.edit-card textarea:focus {
+    border-color: #4da3ff;
+    box-shadow: 0 0 15px rgba(77,163,255,0.4);
+}
+
+/* Buttons */
+.btn-modern {
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+/* Cancel */
+.btn-outline-secondary {
+    border: 2px solid rgba(255,255,255,0.4);
+    color: white;
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-3px);
+}
+
+/* Update Button */
+.btn-primary {
+    background: linear-gradient(135deg,#4da3ff,#1e88e5);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(30,136,229,0.5);
+}
+
+</style>
+
+<div class="edit-wrapper">
+
+    <div class="edit-card">
+
+        <h3 class="edit-title">✏ Edit Exam</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'my_exams' %}" class="btn btn-outline-secondary btn-modern">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary btn-modern">
+                    Update Exam
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

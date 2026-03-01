@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(rgba(15,20,40,0.85), rgba(15,20,40,0.85)),
+        url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1920");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #ffffff;
+    }
+
+    /* ===== Buttons ===== */
+    a[href*="create"] {
+        border-radius: 30px !important;
+        padding: 10px 18px !important;
+        font-weight: 600;
+        transition: 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    a[href*="create"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        opacity: 0.9;
+    }
+
+    /* ===== Glass Table ===== */
+    table {
+        background: rgba(255,255,255,0.05) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.15);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.5);
+    }
+
+    th {
+        background: rgba(255,255,255,0.08) !important;
+        color: #170303;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    td {
+        background: transparent !important;
+        color: #ffffff;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    tr:hover {
+        background: rgba(255,255,255,0.08);
+        transition: 0.3s ease;
+    }
+
+    /* ===== Status Styling ===== */
+    span[style*="green"] {
+        background: rgba(40,167,69,0.2);
+        padding: 5px 12px;
+        border-radius: 20px;
+        color: #28ff8f !important;
+    }
+
+    span[style*="orange"] {
+        background: rgba(255,165,0,0.2);
+        padding: 5px 12px;
+        border-radius: 20px;
+        color: #ffb347 !important;
+    }
+
+    span[style*="gray"] {
+        opacity: 0.6;
+    }
+
+    /* ===== Action Links ===== */
+    td a {
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+
+    /* Empty State Box */
+    div[style*="background:#f8f9fa"] {
+        background: rgba(12,122,205,0.15) !important;
+        backdrop-filter: blur(15px);
+        border-radius: 15px !important;
+        color: hsl(0, 28%, 95%);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+/* ================= MOBILE RESPONSIVE FIX ================= */
+@media (max-width: 768px) {
+
+    /* Background mobile glitch fix */
+    body {
+        background-attachment: scroll;
+    }
+
+    /* Title center + resize */
+    h2 {
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Stack buttons vertically */
+    a[href*="create"] {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    /* Make table scrollable */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Reduce font size */
+    th, td {
+        font-size: 14px;
+        padding: 8px !important;
+    }
+
+    /* Remove hover lift in mobile */
+    tr:hover {
+        transform: none;
+    }
+
+    /* Actions spacing */
+    td a {
+        display: inline-block;
+        margin: 4px 0;
+        font-size: 13px;
+    }
+
+}
+
+</style>
+
+<h2 style="margin-bottom:20px;">My Exams</h2>
+
+<div style="margin-bottom:20px;">
+    <a href="{% url 'create_subject' %}" 
+       style="background:#28a745;color:white;padding:8px 14px;
+              border-radius:5px;text-decoration:none;margin-right:10px;">
+       + Create Subject
+    </a>
+
+    <a href="{% url 'create_exam' %}" 
+       style="background:#007bff;color:white;padding:8px 14px;
+              border-radius:5px;text-decoration:none;">
+       + Create New Exam
+    </a>
+</div>
+
+{% if exams %}
+<table border="1" cellpadding="12" cellspacing="0" 
+       style="border-collapse:collapse;width:100%;background:white;">
+    <tr style="background:#f2f2f2;">
+        <th>Title</th>
+        <th>Duration</th>
+        <th>Questions</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for exam in exams %}
+    <tr>
+        <td>{{ exam.title }}</td>
+        <td>{{ exam.duration }} mins</td>
+        <td>{{ exam.question_count }}</td>
+
+        <td>
+            {% if exam.is_published %}
+                <span style="color:green;font-weight:bold;">
+                    Published
+                </span>
+            {% else %}
+                <span style="color:orange;">
+                    Draft
+                </span>
+            {% endif %}
+        </td>
+
+        <td>
+
+            <a href="{% url 'add_question' exam.id %}"
+               style="color:#007bff;text-decoration:none;">
+               Add Question
+            </a> |
+
+            <a href="{% url 'edit_exam' exam.id %}"
+               style="color:orange;text-decoration:none;">
+               Edit
+            </a> |
+
+            <a href="{% url 'delete_exam' exam.id %}"
+               onclick="return confirm('Delete this exam?')"
+               style="color:red;text-decoration:none;">
+               Delete
+            </a> |
+
+            {% if not exam.is_published %}
+                {% if exam.question_count > 0 %}
+                    <a href="{% url 'publish_exam' exam.id %}"
+                       style="color:green;text-decoration:none;">
+                       Publish
+                    </a>
+                {% else %}
+                    <span style="color:gray;">
+                        Add Questions to Publish
+                    </span>
+                {% endif %}
+            {% endif %}
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<div style="padding:20px;background:#f8f9fa;border-radius:6px;">
+    <p>No exams created yet.</p>
+</div>
+{% endif %}
+
+{% endblock %}

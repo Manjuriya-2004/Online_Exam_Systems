@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+body {
+    background: linear-gradient(135deg,#eef2f7,#dbe4f3);
+}
+
+.exam-container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.question-card {
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.question-card:hover {
+    transform: translateY(-3px);
+}
+
+.timer-box {
+    position: sticky;
+    top: 80px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.option-label {
+    display: block;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option-label:hover {
+    background: #f1f5ff;
+}
+
+input[type="radio"]:checked + .option-label {
+    background: #dbe4ff;
+    border-color: #4e73df;
+}
+
+.submit-btn {
+    border-radius: 30px;
+    padding: 10px 25px;
+}
+</style>
+
+<div class="container exam-container mt-5">
+
+    <div class="row">
+
+        <!-- Questions Section -->
+        <div class="col-lg-8">
+
+            <h3 class="fw-bold mb-4">
+                {{ exam.title }}
+            </h3>
+
+            <form method="POST" action="{% url 'submit_exam' exam.id %}">
+                {% csrf_token %}
+                <input type="hidden" id="exam-duration" value="{{ duration }}">
+
+                {% for question in questions %}
+
+                <div class="card question-card border-0 p-4 mb-4">
+                    <h6 class="fw-bold mb-3">
+                        {{ forloop.counter }}. {{ question.question_text }}
+                    </h6>
+
+                    <div>
+                        <input type="radio" id="q{{question.id}}a" name="{{ question.id }}" value="A" hidden>
+                        <label for="q{{question.id}}a" class="option-label">
+                            A. {{ question.option_a }}
+                        </label>
+
+                        <input type="radio" id="q{{question.id}}b" name="{{ question.id }}" value="B" hidden>
+                        <label for="q{{question.id}}b" class="option-label">
+                            B. {{ question.option_b }}
+                        </label>
+
+                        <input type="radio" id="q{{question.id}}c" name="{{ question.id }}" value="C" hidden>
+                        <label for="q{{question.id}}c" class="option-label">
+                            C. {{ question.option_c }}
+                        </label>
+
+                        <input type="radio" id="q{{question.id}}d" name="{{ question.id }}" value="D" hidden>
+                        <label for="q{{question.id}}d" class="option-label">
+                            D. {{ question.option_d }}
+                        </label>
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+                <div class="text-end">
+                    <button type="submit" 
+                            onclick="return confirm('Are you sure you want to submit?')"
+                            class="btn btn-primary submit-btn">
+                        Submit Exam
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Timer Section -->
+        <div class="col-lg-4">
+            <div class="timer-box text-center">
+                <h5 class="fw-bold">⏳ Time Remaining</h5>
+                <h3 id="timer" class="text-danger fw-bold mt-2"></h3>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TIMER SCRIPT -->
+<script>
+let durationValue = document.getElementById("exam-duration").value;
+let examDuration = parseInt(durationValue || 0) * 60;
+
+let timerDisplay = document.getElementById("timer");
+let form = document.querySelector("form");
+
+function updateTimer() {
+
+    let minutes = Math.floor(examDuration / 60);
+    let seconds = examDuration % 60;
+
+    timerDisplay.textContent =
+        minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+    if (examDuration <= 0) {
+        clearInterval(interval);
+        alert("Time is up! Exam will be submitted.");
+        form.submit();
+    }
+
+    examDuration--;
+}
+
+updateTimer();
+let interval = setInterval(updateTimer, 1000);
+</script>
+
+{% endblock %}

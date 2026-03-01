@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)),
+        url("https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=1920");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        font-family: 'Segoe UI', sans-serif;
+        color: #ffffff;
+    }
+
+    /* Glass Card */
+    .card {
+        background: rgba(12,122,205,0.15) !important;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6) !important;
+        border-radius: 20px !important;
+        animation: fadeUp 0.6s ease;
+    }
+
+    h3 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-shadow: 0 0 20px rgba(78,115,223,0.6);
+    }
+
+    .form-label {
+        color: #cfd8ff;
+        font-weight: 600;
+    }
+
+    /* Inputs */
+    input, select {
+        background: #f7f3f3df !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        color: #151516 !important;
+        border-radius: 12px !important;
+        padding: 10px 14px !important;
+        transition: 0.3s ease;
+    }
+
+    input:focus, select:focus {
+        background: rgba(181, 12, 12, 0.18) !important;
+        box-shadow: 0 0 15px rgba(78,115,223,0.7) !important;
+        transform: scale(1.02);
+    }
+
+    /* ===== SUPER CLEAR PUBLISH TOGGLE ===== */
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .form-check-label {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+    }
+
+    /* Bigger Switch */
+    .form-check-input {
+        width: 65px !important;
+        height: 32px !important;
+        cursor: pointer;
+        background-color: #444 !important;
+        border: none !important;
+        transition: 0.3s ease;
+    }
+
+    /* OFF state */
+    .form-check-input:not(:checked) {
+        background-color: #555 !important;
+        box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+    }
+
+    /* ON state */
+    .form-check-input:checked {
+        background: linear-gradient(135deg,#28a745,#1cc88a) !important;
+        box-shadow: 0 0 20px rgba(40,167,69,0.9);
+    }
+
+    /* Label color change when ON */
+    .form-check-input:checked + .form-check-label {
+        color: #28ff8f;
+        text-shadow: 0 0 10px rgba(40,167,69,0.8);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background: linear-gradient(135deg,#4e73df,#224abe) !important;
+        border: none !important;
+        box-shadow: 0 8px 25px rgba(78,115,223,0.6);
+        transition: 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(78,115,223,0.9);
+    }
+
+    .btn-outline-secondary {
+        border-radius: 30px !important;
+        padding: 8px 25px !important;
+        color: #ccc !important;
+        border-color: rgba(255,255,255,0.3) !important;
+    }
+
+    .btn-outline-secondary:hover {
+        background: rgba(255,255,255,0.1) !important;
+        color: #fff !important;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+
+/* ================= MOBILE RESPONSIVE FIX ================= */
+@media (max-width: 768px) {
+
+    /* Fix fixed background scroll issue */
+    body {
+        background-attachment: scroll;
+    }
+
+    /* Card spacing adjust */
+    .card {
+        margin: 15px;
+        padding: 20px !important;
+        border-radius: 16px !important;
+    }
+
+    /* Heading resize */
+    h3 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* Label resize */
+    .form-label {
+        font-size: 14px;
+    }
+
+    /* Inputs smaller */
+    input, select {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+    }
+
+    /* Toggle adjust */
+    .form-check {
+        gap: 10px;
+    }
+
+    .form-check-input {
+        width: 55px !important;
+        height: 28px !important;
+    }
+
+    .form-check-label {
+        font-size: 14px;
+    }
+
+    /* Buttons full width on mobile */
+    .btn-primary,
+    .btn-outline-secondary {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* Remove hover lift on mobile */
+    .btn-primary:hover {
+        transform: none;
+    }
+
+}
+</style>
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4 p-5">
+
+                <h3 class="fw-bold mb-4 text-center">
+                    📝 Create New Exam
+                </h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- Subject -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Subject
+                        </label>
+                        {{ form.subject }}
+                    </div>
+
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Exam Title
+                        </label>
+                        {{ form.title }}
+                    </div>
+
+                    <!-- Duration + Marks -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Duration (minutes)
+                            </label>
+                            {{ form.duration }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">
+                                Total Marks
+                            </label>
+                            {{ form.total_marks }}
+                        </div>
+                    </div>
+
+
+
+                    <!-- Publish Switch -->
+                    <div class="form-check form-switch mb-4">
+                        {{ form.is_published }}
+                        <label class="form-check-label fw-semibold">
+                            Publish Exam
+                        </label>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+
+                        <a href="{% url 'my_exams' %}" 
+                           class="btn btn-outline-secondary rounded-pill px-4">
+                           Cancel
+                        </a>
+
+                        <button type="submit" 
+                                class="btn btn-primary rounded-pill px-5">
+                            Save Exam
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

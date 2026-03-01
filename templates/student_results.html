@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* 🔥 Premium Background */
+body {
+    background: linear-gradient(rgba(10,15,30,0.88), rgba(10,15,30,0.88)),
+                url('https://images.unsplash.com/photo-1508780709619-79562169bc64');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+}
+
+/* Wrapper */
+.results-wrapper {
+    min-height: 90vh;
+    padding-top: 40px;
+}
+
+/* Page Title */
+h2 {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* Glass Card */
+.results-card {
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    color: white;
+}
+
+/* Table */
+.table {
+    color: white;
+    width: 100%;
+}
+
+/* Remove forced width */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Header */
+.table thead {
+    background: rgba(0,0,0,0.6);
+}
+
+.table thead th {
+    color: #ffffff;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+/* Hover */
+.table tbody tr:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+/* Badges */
+.badge.bg-info {
+    background: linear-gradient(135deg,#00c6ff,#0072ff) !important;
+    border-radius: 20px;
+}
+
+.pass-badge {
+    background: linear-gradient(135deg,#00e676,#00c853);
+    border-radius: 20px;
+}
+
+.fail-badge {
+    background: linear-gradient(135deg,#ff5252,#d50000);
+    border-radius: 20px;
+}
+
+/* Mobile Fix */
+@media (max-width: 768px) {
+
+    .results-wrapper {
+        padding-top: 25px;
+    }
+
+    h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .results-card {
+        padding: 12px !important;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
+</style>
+<div class="results-wrapper">
+
+    <h2 class="fw-bold mb-4">📊 My Results</h2>
+
+    <div class="card results-card p-4 border-0">
+
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Exam</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for result in results %}
+                <tr>
+                    <td class="fw-semibold">
+                        {{ result.exam.title }}
+                    </td>
+
+                    <td class="fw-bold text-primary">
+                        {{ result.score }}
+                    </td>
+
+                    <td>
+                        <span class="badge bg-info text-dark px-3 py-2">
+                            {{ result.percentage|floatformat:0 }}%
+                        </span>
+                    </td>
+
+                    <td>
+                        {% if result.percentage >= 50 %}
+                            <span class="badge pass-badge text-white px-3 py-2">
+                                ✅ Passed
+                            </span>
+                        {% else %}
+                            <span class="badge fail-badge text-white px-3 py-2">
+                                ❌ Failed
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-muted py-4">
+                        🚫 No results available yet.
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+            
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

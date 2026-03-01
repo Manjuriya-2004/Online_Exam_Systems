@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* Background */
+body {
+    background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)),
+                url('https://images.unsplash.com/photo-1508780709619-79562169bc64');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll; /* mobile fix */
+}
+
+/* Title */
+h2 {
+    color: #ffffff !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+/* Wrapper */
+.leaderboard-wrapper {
+    min-height: 90vh;
+    padding-top: 40px;
+}
+
+/* Glass Card */
+.leaderboard-card {
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    color: white;
+    padding: 15px;
+}
+
+/* Table */
+.table {
+    color: white;
+    width: 100%;
+}
+
+/* Responsive table scroll */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Header */
+.table thead {
+    background: rgba(0,0,0,0.6);
+}
+
+.table thead th {
+    color: #ffffff;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+}
+
+/* Borders */
+.table th,
+.table td {
+    border-right: 1px solid rgba(255,255,255,0.15);
+}
+
+.table th:last-child,
+.table td:last-child {
+    border-right: none;
+}
+
+/* Row hover */
+.table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    transition: 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+/* Top rank highlight */
+.top-row {
+    background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,140,0,0.2));
+}
+
+/* Medal */
+.rank-medal {
+    font-size: 20px;
+}
+
+/* Badge */
+.badge {
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-weight: 500;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+    .leaderboard-wrapper {
+        padding-top: 25px;
+    }
+
+    h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .leaderboard-card {
+        padding: 12px;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    .rank-medal {
+        font-size: 18px;
+    }
+
+}
+
+</style>
+
+<div class="container leaderboard-wrapper">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">🏆 Leaderboard</h2>
+    </div>
+
+    <div class="card leaderboard-card p-4 border-0">
+
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Student</th>
+                        <th>Total Score</th>
+                        <th>Badge</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for entry in leaderboard %}
+                    <tr class="{% if entry.rank == 1 %}top-row{% endif %}">
+
+                        <td class="fw-bold rank-medal">
+                            {% if entry.rank == 1 %}
+                                🥇
+                            {% elif entry.rank == 2 %}
+                                🥈
+                            {% elif entry.rank == 3 %}
+                                🥉
+                            {% else %}
+                                {{ entry.rank }}
+                            {% endif %}
+                        </td>
+
+                        <td class="fw-semibold">
+                            {{ entry.username }}
+                        </td>
+
+                        <td class="fw-bold text-primary">
+                            {{ entry.total_score }}
+                        </td>
+
+                        <td>
+                            {% if entry.rank == 1 %}
+                                <span class="badge bg-warning text-dark px-3 py-2">
+                                    👑 Top Performer
+                                </span>
+                            {% elif entry.rank <= 3 %}
+                                <span class="badge bg-info text-dark px-3 py-2">
+                                    ⭐ Top 3
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary px-3 py-2">
+                                    Participant
+                                </span>
+                            {% endif %}
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-muted py-4">
+                            🚫 No results available yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

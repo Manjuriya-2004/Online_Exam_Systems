@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background: 
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+        url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.register-wrapper {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 700px;
+    padding: 45px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    color: #0f0451e3;
+    transition: 0.4s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.register-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+}
+
+.register-title {
+    font-weight: bold;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.register-card input,
+.register-card select {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 30px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    color: rgb(15, 15, 16);
+    margin-bottom: 15px;
+}
+
+.register-card input::placeholder {
+    color: rgba(255,255,255,0.8);
+}
+
+.register-card input:focus,
+.register-card select:focus {
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 10px rgba(0, 255, 200, 0.6);
+    outline: none;
+}
+
+.btn-modern {
+    border-radius: 30px;
+    padding: 14px;
+    font-weight: 600;
+    background: linear-gradient(135deg,#00f260,#0575e6);
+    border: none;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px rgba(0,255,200,0.4);
+}
+
+.btn-modern:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,255,200,0.6);
+}
+
+a {
+    color: #f6ef1f;
+    font-weight: 700;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="register-wrapper">
+
+    <div class="register-card text-center">
+
+        <h3 class="register-title">📝 Create Account</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="d-grid mt-3">
+                <button type="submit"
+                        class="btn btn-modern">
+                    Register
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <small>
+                Already have an account?
+                <br>
+                <a href="{% url 'login' %}">Login</a>
+            </small>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

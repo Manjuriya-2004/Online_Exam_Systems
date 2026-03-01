@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+/* 🔥 Full Background with Dark Overlay */
+body {
+    background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)),
+                url('https://images.unsplash.com/photo-1492724441997-5dc865305da7');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll; /* FIXED for mobile */
+}
+
+/* Wrapper */
+.dashboard-wrapper {
+    min-height: 90vh;
+    padding-top: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Title */
+h2 {
+    color: #ffffff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+/* 🔥 Glass Stat Cards */
+.stat-card {
+    border-radius: 25px;
+    background: rgba(12, 122, 205, 0.15) !important;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transition: 0.4s ease;
+    padding: 20px;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.7);
+}
+
+.bg-primary,
+.bg-success,
+.bg-danger {
+    background: transparent !important;
+}
+
+.stat-card h6 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    opacity: 0.85;
+}
+
+.stat-card h2 {
+    font-size: 32px;
+}
+
+/* 🔥 Glass Chart Card */
+.chart-card {
+    border-radius: 30px;
+    background: rgba(12,122,205,0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    color: white;
+    padding: 20px;
+}
+
+/* Chart title */
+.chart-card h5 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Chart container responsive */
+.chart-container {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: auto;
+}
+
+/* Text color white */
+.card-body,
+.chart-card {
+    color: white !important;
+}
+
+/* ================= MOBILE FIX ================= */
+@media (max-width: 768px) {
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .stat-card {
+        border-radius: 18px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card h2 {
+        font-size: 26px;
+    }
+
+    .chart-container {
+        max-width: 100%;
+    }
+
+}
+
+</style>
+
+
+<div class="container dashboard-wrapper">
+
+    <h2 class="mb-4 fw-bold">📊 Student Dashboard</h2>
+
+    <!-- Stats -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-md-4">
+            <div class="card shadow text-center bg-primary text-white stat-card">
+                <div class="card-body">
+                    <h6>Total Exams Attempted</h6>
+                    <h2 class="fw-bold">{{ total_exams }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow text-center bg-success text-white stat-card">
+                <div class="card-body">
+                    <h6>Passed</h6>
+                    <h2 class="fw-bold">{{ passed }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow text-center bg-danger text-white stat-card">
+                <div class="card-body">
+                    <h6>Failed</h6>
+                    <h2 class="fw-bold">{{ failed }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chart -->
+    <div class="card chart-card p-4 text-center">
+        <h5 class="fw-semibold mb-4">Performance Overview</h5>
+
+        <div class="chart-container">
+            <canvas id="performanceChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const data = JSON.parse('{{ chart_data|escapejs }}');
+    const ctx = document.getElementById('performanceChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',   // 🔥 changed from pie to doughnut (more modern)
+        data: {
+            labels: ['Passed', 'Failed'],
+            datasets: [{
+                data: data,
+                backgroundColor: ['#28a745', '#dc3545'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',   // 🔥 makes it stylish
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

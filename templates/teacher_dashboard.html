@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(10,15,30,0.85), rgba(10,15,30,0.85)),
+        url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* ===== DASHBOARD HEADER ===== */
+    h2 {
+        font-weight: 700;
+        font-size: 28px;
+        letter-spacing: 1px;
+        color: #ffffff;
+    }
+
+    .text-muted {
+        color: rgba(255,255,255,0.7) !important;
+    }
+
+    /* ===== UNIFORM GLASS CARDS ===== */
+    .card {
+        background: rgba(12, 122, 205, 0.15) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        box-shadow: 0 10px 35px rgba(0,0,0,0.5) !important;
+        transition: all 0.4s ease;
+        border-radius: 18px !important;
+    }
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 18px 45px rgba(0,0,0,0.6) !important;
+    }
+
+    /* ===== STAT CARDS FIX (MAKE ALL SAME STYLE) ===== */
+    .card-body h6 {
+        font-size: 20px;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+        opacity: 0.8;
+        color: #cfd8ff;
+    }
+
+    .card-body h1 {
+        font-size: 58px;
+        font-weight: 700;
+        margin-top: 10px;
+        color: #ffffff !important;
+        text-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+    }
+
+    /* Remove inline gradient effect visually */
+    .card.text-dark {
+        color: #ffffff !important;
+    }
+
+    /* ===== CHART SECTION ===== */
+    .card.p-4 {
+        padding: 35px !important;
+    }
+
+    .card h5 {
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: 1px;
+        color: #ffffff;
+    }
+
+    .badge {
+        background: linear-gradient(135deg,#4e73df,#224abe) !important;
+        font-size: 15px;
+        padding: 8px 18px;
+        border-radius: 30px;
+        box-shadow: 0 0 15px rgba(78,115,223,0.6);
+    }
+
+    /* Improve chart text visibility */
+    canvas {
+        filter: brightness(1.2);
+    }
+
+    /* Animation */
+    .container-fluid {
+        animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+
+/* ================= MOBILE RESPONSIVE FIX ================= */
+@media (max-width: 768px) {
+
+    body {
+        background-attachment: scroll; /* mobile glitch fix */
+    }
+
+    h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* Reduce card padding */
+    .card {
+        border-radius: 14px !important;
+    }
+
+    .card.p-4 {
+        padding: 20px !important;
+    }
+
+    /* Stat number smaller */
+    .card-body h1 {
+        font-size: 36px;
+    }
+
+    .card-body h6 {
+        font-size: 14px;
+    }
+
+    /* Chart title smaller */
+    .card h5 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    /* Badge adjust */
+    .badge {
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+
+    /* Reduce hover lift on mobile */
+    .card:hover {
+        transform: none;
+    }
+
+}
+</style>
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📊 Teacher Dashboard</h2>
+        <span class="text-muted">Overview of your exams & performance</span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="row g-4 mb-5">
+
+        <!-- Total Exams -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 text-white"
+                 style="background: linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-uppercase">Total Exams</h6>
+                    <h1 class="fw-bold">{{ total_exams }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Published Exams -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 text-white"
+                 style="background: linear-gradient(135deg,#1cc88a,#13855c);">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-uppercase">Published Exams</h6>
+                    <h1 class="fw-bold">{{ published_exams }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Questions -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 rounded-4 text-dark"
+                 style="background: linear-gradient(135deg,#f6c23e,#dda20a);">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-uppercase">Total Questions</h6>
+                    <h1 class="fw-bold">{{ total_questions }}</h1>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chart Section -->
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold">📈 Questions Per Exam</h5>
+            <span class="badge bg-primary">{{ total_exams }} Exams</span>
+        </div>
+        <canvas id="examChart" height="100"></canvas>
+    </div>
+
+</div>
+
+<!-- Chart JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const examTitles = JSON.parse('{{ exam_titles|escapejs }}');
+    const questionCounts = JSON.parse('{{ question_counts|escapejs }}');
+
+    const ctx = document.getElementById('examChart').getContext('2d');
+
+    // Gradient effect
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(78, 115, 223, 0.9)');
+    gradient.addColorStop(1, 'rgba(78, 115, 223, 0.3)');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: examTitles,
+            datasets: [{
+                label: 'Number of Questions',
+                data: questionCounts,
+                backgroundColor: gradient,
+                borderRadius: 15,
+                hoverBackgroundColor: 'rgba(54, 185, 204, 0.9)'
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1500,
+                easing: 'easeOutQuart'
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1f2937',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    padding: 12,
+                    cornerRadius: 10
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: "rgba(200,200,200,0.2)"
+                    },
+                    ticks: {
+                        precision: 0
+                    }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

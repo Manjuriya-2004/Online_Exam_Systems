@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Exam Portal</title>
+
+    <!-- Responsive Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+
+/* ================= GLOBAL ================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(33, 37, 41, 0.95) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+}
+
+.navbar-brand {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #4da3ff !important;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    bottom: 4px;
+    width: 0%;
+    height: 2px;
+    background: #4da3ff;
+    transition: 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 60%;
+}
+
+.navbar span strong {
+    color: #4da3ff;
+}
+
+/* Buttons */
+.btn-sm {
+    border-radius: 20px;
+    padding: 6px 14px;
+    transition: 0.3s ease;
+}
+
+.btn-danger:hover {
+    box-shadow: 0 5px 15px rgba(255,77,77,0.4);
+}
+
+.btn-success:hover {
+    box-shadow: 0 5px 15px rgba(0,230,118,0.4);
+}
+
+/* ================= MAIN ================= */
+main {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* ================= FOOTER ================= */
+footer {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+}
+
+footer .container {
+    position: relative;
+    z-index: 2;
+}
+
+footer h5 {
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 18px;
+}
+
+footer p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 6px;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+    transition: 0.3s ease;
+}
+
+footer a:hover {
+    color: #4da3ff !important;
+}
+
+footer small {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+}
+
+/* ================= MOBILE IMPROVEMENTS ================= */
+@media (max-width: 768px) {
+
+    main {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .navbar-brand {
+        font-size: 18px;
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .navbar-nav .nav-item {
+        margin-bottom: 8px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    footer h5 {
+        font-size: 16px;
+    }
+
+    footer p {
+        font-size: 13px;
+    }
+}
+
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+
+        <a class="navbar-brand" href="{% url 'home' %}">
+            Online Exam
+        </a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto">
+                {% if user.is_authenticated %}
+
+                    {% if user.role == 'teacher' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'teacher_dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'teacher_results' %}">Student Results</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_exams' %}">My Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
+                        </li>
+                    {% elif user.role == 'student' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'student_dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'student_exams' %}">Browse Exams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'student_results' %}">My Results</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item text-center text-lg-start">
+                        <span class="text-white d-block d-lg-inline me-lg-3 mb-2 mb-lg-0">
+                            Welcome, <strong>{{ user.username }}</strong>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-center" href="{% url 'login' %}">
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-success btn-sm ms-lg-2" href="{% url 'register' %}">
+                            Register
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<!-- ================= MAIN ================= -->
+<main class="container flex-fill mt-5 pt-4 px-3 px-md-4">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center py-4 mt-auto">
+    <div class="container">
+
+        <h5>Online Exam Portal – Digital Assessment Platform</h5>
+        <p>Secure • Scalable • Real-Time Examination Management</p>
+        <p>Powered by Python, Django & Modern Web Architecture</p>
+
+        <p class="mt-2">
+            📧 csprogramer19@gmail.com |
+            📞 +91  80154 31567
+        </p>
+
+        <div class="mt-2">
+            <a href="#" class="me-3"><i class="bi bi-linkedin"></i> LinkedIn</a>
+            <a href="#"><i class="bi bi-github"></i> GitHub</a>
+        </div>
+
+        <small class="d-block mt-3">
+            © 2026 Online Exam Portal. All Rights Reserved.
+        </small>
+
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
