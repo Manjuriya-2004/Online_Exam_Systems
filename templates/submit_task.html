@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Task</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:30px;
+            background:linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b,
+                #334155
+            );
+        }
+
+        .container{
+            width:100%;
+            max-width:900px;
+        }
+
+        .glass-card{
+            background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:25px;
+            padding:40px;
+            box-shadow:0 10px 35px rgba(0,0,0,0.4);
+        }
+
+        .title{
+            text-align:center;
+            color:rgb(255, 255, 255);
+            font-size:38px;
+            font-weight:bold;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#cbd5e1;
+            margin-bottom:30px;
+        }
+
+        .task-box{
+            background:rgba(255,255,255,0.05);
+            border-radius:15px;
+            padding:20px;
+            margin-bottom:25px;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .task-box h3{
+            color:white;
+            margin-bottom:10px;
+        }
+
+        .task-box p{
+            color:#dbeafe;
+            line-height:1.7;
+        }
+
+        .task-info{
+            margin-top:15px;
+            color:#93c5fd;
+            font-weight:500;
+        }
+
+        label{
+            display:block;
+            color:white;
+            margin-bottom:8px;
+            font-weight:600;
+        }
+
+        textarea,
+        input[type="file"]{
+            width:100%;
+            padding:14px;
+            border:none;
+            outline:none;
+            border-radius:12px;
+            background:rgba(255,255,255,0.10);
+            color:white;
+            border:1px solid rgba(255,255,255,0.15);
+        }
+
+        textarea{
+            min-height:180px;
+            resize:none;
+        }
+
+        textarea:focus,
+        input[type="file"]:focus{
+            border:1px solid #38bdf8;
+        }
+
+        .form-group{
+            margin-bottom:20px;
+        }
+
+        .submit-btn{
+            width:100%;
+            border:none;
+            padding:15px;
+            border-radius:12px;
+            font-size:18px;
+            font-weight:bold;
+            color:white;
+            cursor:pointer;
+            background:linear-gradient(
+                135deg,
+                #06b6d4,
+                #2563eb
+            );
+            transition:.3s;
+        }
+
+        .submit-btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 10px 25px rgba(37,99,235,.5);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="glass-card">
+
+        <h1 class="title">
+            Submit Task
+        </h1>
+
+        <p class="subtitle">
+            Complete and upload your assignment before the deadline
+        </p>
+
+        <div class="task-box">
+
+            <h3>{{ task.title }}</h3>
+
+            <p>
+                {{ task.description }}
+            </p>
+
+            <div class="task-info">
+                Marks : {{ task.marks }} <br>
+                Deadline : {{ task.deadline }}
+            </div>
+
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+
+                <label>
+                    Your Answer
+                </label>
+
+                {{ form.answer }}
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Upload File (PDF / ZIP / DOC)
+                </label>
+
+                {{ form.file }}
+
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Submit Assignment
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

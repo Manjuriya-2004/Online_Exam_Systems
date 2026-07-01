@@ -1,0 +1,269 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Coding Challenge</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    padding:40px;
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #334155
+    );
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.glass-card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 20px 40px rgba(0,0,0,.35);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo-box{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:20px;
+    background:linear-gradient(
+        135deg,
+        #06b6d4,
+        #2563eb
+    );
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+.header h1{
+    color:white;
+    font-size:42px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#cbd5e1;
+    max-width:700px;
+    margin:auto;
+    line-height:1.7;
+}
+
+.info-box{
+    background:rgba(59,130,246,.15);
+    border-left:5px solid #3b82f6;
+    padding:18px;
+    border-radius:12px;
+    margin-bottom:30px;
+    color:#dbeafe;
+}
+
+.form-group{
+    margin-bottom:25px;
+}
+
+.form-group label{
+    display:block;
+    color:white;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.custom-input,
+input,
+textarea,
+select{
+    width:100%;
+    padding:16px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.08);
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+.custom-input:focus,
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#38bdf8;
+    box-shadow:0 0 15px rgba(56,189,248,.25);
+}
+
+.big-editor{
+    min-height:280px;
+    resize:vertical;
+}
+
+.small-editor{
+    min-height:120px;
+    resize:none;
+}
+
+.row-box{
+    display:flex;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.half-box{
+    flex:1;
+}
+
+.half-box label{
+    display:block;
+    color:white;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.submit-btn{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:700;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        #06b6d4,
+        #2563eb
+    );
+    transition:.3s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 30px rgba(37,99,235,.4);
+}
+
+.footer{
+    text-align:center;
+    color:#94a3b8;
+    margin-top:25px;
+}
+
+@media(max-width:768px){
+
+    body{
+        padding:20px;
+    }
+
+    .row-box{
+        flex-direction:column;
+    }
+
+    .header h1{
+        font-size:30px;
+    }
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="glass-card">
+
+        <div class="header">
+
+            <div class="logo-box">
+                💻
+            </div>
+
+            <h1>Add Coding Challenge</h1>
+
+            <p>
+                Create professional coding assessments and evaluate
+                programming skills through real-world challenges.
+            </p>
+
+        </div>
+
+        <div class="info-box">
+            📚 Current Exam :
+            <strong>{{ exam.title }}</strong>
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>🚀 Challenge Title</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label>📝 Problem Statement</label>
+                {{ form.problem_statement }}
+            </div>
+
+            <div class="row-box">
+
+                <div class="half-box">
+                    <label>📥 Sample Input</label>
+                    {{ form.sample_input }}
+                </div>
+
+                <div class="half-box">
+                    <label>📤 Sample Output</label>
+                    {{ form.sample_output }}
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label>🏆 Marks</label>
+                {{ form.marks }}
+            </div>
+
+            <button type="submit" class="submit-btn">
+                🚀 Add Coding Challenge
+            </button>
+
+        </form>
+
+        <div class="footer">
+            Online Examination System • Coding Assessment Module
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

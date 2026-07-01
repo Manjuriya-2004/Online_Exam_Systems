@@ -1,0 +1,199 @@
+```html
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+body{
+    background: linear-gradient(135deg,#0f172a,#1e293b,#334155);
+    min-height:100vh;
+}
+
+.page-title{
+    color:#fff;
+    font-weight:700;
+    margin-bottom:30px;
+}
+
+.glass-card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    transition:.3s;
+}
+
+.glass-card:hover{
+    transform:translateY(-5px);
+}
+
+.student-badge{
+    background:linear-gradient(135deg,#06b6d4,#3b82f6);
+    color:white;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.question-title{
+    color:#fff;
+    font-size:22px;
+    font-weight:700;
+}
+
+.code-box{
+    background:#020617;
+    color:#22c55e;
+    padding:20px;
+    border-radius:15px;
+    overflow-x:auto;
+    font-family:Consolas, monospace;
+    font-size:14px;
+    margin-top:15px;
+    border:1px solid #1e293b;
+}
+
+.info-box{
+    background:rgba(255,255,255,.06);
+    padding:15px;
+    border-radius:12px;
+    color:#cbd5e1;
+    margin-top:15px;
+}
+
+.action-btn{
+    border:none;
+    padding:12px 25px;
+    border-radius:12px;
+    font-weight:600;
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    display:inline-block;
+    transition:.3s;
+}
+
+.action-btn:hover{
+    color:white;
+    transform:translateY(-2px);
+}
+
+.empty-box{
+    text-align:center;
+    background:rgba(255,255,255,.08);
+    padding:60px;
+    border-radius:20px;
+    color:white;
+}
+
+.total-box{
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    padding:20px;
+    border-radius:18px;
+    color:white;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(37,99,235,.3);
+}
+
+</style>
+
+<div class="container py-5">
+
+    <div class="total-box">
+        <h2 class="mb-0">
+            💻 Coding Submissions Dashboard
+        </h2>
+        <small>
+            Review student coding answers and assign marks
+        </small>
+    </div>
+
+    {% if submissions %}
+
+        {% for submission in submissions %}
+
+        <div class="glass-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+                    <h3 class="question-title">
+                        {{ submission.coding_question.title }}
+                    </h3>
+                </div>
+
+                <div>
+                    <span class="student-badge">
+                        {{ submission.student.username }}
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="info-box">
+
+                <p>
+                    <strong>Student :</strong>
+                    {{ submission.student.username }}
+                </p>
+
+                <p>
+                    <strong>Language :</strong>
+                    {{ submission.language }}
+                </p>
+
+                <p>
+                    <strong>Submitted :</strong>
+                    {{ submission.submitted_at }}
+                </p>
+
+                <p>
+                    <strong>Current Score :</strong>
+                    {{ submission.score }}
+                </p>
+
+            </div>
+
+            <div class="code-box">
+<pre>{{ submission.code }}</pre>
+            </div>
+
+            <div class="mt-4">
+
+                <a href="{% url 'give_marks' submission.id %}"
+                   class="action-btn">
+
+                    ⭐ Give Marks
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-box">
+
+            <h2>
+                No Coding Submissions Found
+            </h2>
+
+            <p class="mt-3">
+                Students have not submitted any coding answers yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+```

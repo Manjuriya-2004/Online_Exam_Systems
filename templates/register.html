@@ -2,125 +2,273 @@
 {% block content %}
 
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    background: 
-        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-        url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: 'Segoe UI', sans-serif;
+
+body{
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    background:
+    linear-gradient(rgba(10,15,30,.75),rgba(10,15,30,.75)),
+    url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    font-family:'Segoe UI',sans-serif;
 }
 
-.register-wrapper {
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Hide Django help text */
+.helptext{
+    display:none;
 }
 
-.register-card {
-    width: 100%;
-    max-width: 700px;
-    padding: 45px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    color: #0f0451e3;
-    transition: 0.4s ease;
-    border: 1px solid rgba(255,255,255,0.2);
+/* Hide default password instruction list */
+.register-card ul:not(.custom-list){
+    display:none;
 }
 
-.register-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+/* Error Styling */
+.errorlist{
+    list-style:none;
+    padding:0;
+    margin-bottom:10px;
+    color:#ff6b6b;
+    font-size:13px;
+    font-weight:600;
 }
 
-.register-title {
-    font-weight: bold;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
+.register-wrapper{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.register-card{
+    width:100%;
+    max-width:500px;
+    padding:28px;
+    border-radius:22px;
+    background:rgba(255,255,255,.10);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    color:white;
+    transition:.3s;
+}
+
+.register-card:hover{
+    transform:translateY(-3px);
+}
+
+.register-title{
+    font-size:30px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#dbeafe;
+    font-size:14px;
+    margin-bottom:20px;
+}
+
+.register-card label{
+    display:block;
+    text-align:left;
+    margin-bottom:6px;
+    color:white;
+    font-weight:600;
+    font-size:14px;
 }
 
 .register-card input,
-.register-card select {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: 30px;
-    border: none;
-    background: rgba(255,255,255,0.2);
-    color: rgb(15, 15, 16);
-    margin-bottom: 15px;
-}
-
-.register-card input::placeholder {
-    color: rgba(255,255,255,0.8);
+.register-card select{
+    width:100%;
+    padding:12px 15px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,.15);
+    color:white;
+    margin-bottom:12px;
+    outline:none;
+    font-size:14px;
 }
 
 .register-card input:focus,
-.register-card select:focus {
-    background: rgba(255,255,255,0.3);
-    box-shadow: 0 0 10px rgba(0, 255, 200, 0.6);
-    outline: none;
+.register-card select:focus{
+    background:rgba(255,255,255,.20);
+    box-shadow:0 0 12px rgba(0,255,200,.35);
 }
 
-.btn-modern {
-    border-radius: 30px;
-    padding: 14px;
-    font-weight: 600;
-    background: linear-gradient(135deg,#00f260,#0575e6);
-    border: none;
-    transition: 0.3s;
-    box-shadow: 0 10px 25px rgba(0,255,200,0.4);
+.register-card select option{
+    color:black;
 }
 
-.btn-modern:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 35px rgba(0,255,200,0.6);
+.btn-modern{
+    width:100%;
+    border:none;
+    padding:13px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        #00c6ff,
+        #0072ff
+    );
+    transition:.3s;
 }
 
-a {
-    color: #f6ef1f;
-    font-weight: 700;
+.btn-modern:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(0,114,255,.45);
 }
 
-a:hover {
-    text-decoration: underline;
+.password-info{
+    margin-top:10px;
+    background:rgba(255,255,255,.08);
+    border-left:4px solid #00c6ff;
+    padding:12px;
+    border-radius:10px;
+    text-align:left;
 }
+
+.password-info h6{
+    margin-bottom:8px;
+    font-weight:700;
+    color:white;
+    font-size:14px;
+}
+
+.custom-list{
+    margin:0;
+    padding-left:18px;
+    color:#dbeafe;
+}
+
+.custom-list li{
+    margin-bottom:4px;
+    font-size:13px;
+}
+
+.login-text{
+    margin-top:18px;
+    color:white;
+    font-size:14px;
+}
+
+.login-text a{
+    color:#00e5ff;
+    font-weight:700;
+    text-decoration:none;
+}
+
+.login-text a:hover{
+    text-decoration:underline;
+}
+
+/* Mobile Responsive */
+@media(max-width:768px){
+
+    .register-wrapper{
+        padding:15px;
+    }
+
+    .register-card{
+        max-width:100%;
+        padding:20px;
+        border-radius:18px;
+    }
+
+    .register-title{
+        font-size:24px;
+    }
+
+    .subtitle{
+        font-size:13px;
+    }
+
+    .register-card input,
+    .register-card select{
+        padding:11px;
+        font-size:14px;
+    }
+
+    .btn-modern{
+        padding:12px;
+        font-size:14px;
+    }
+
+    .custom-list li{
+        font-size:12px;
+    }
+}
+
 </style>
 
 <div class="register-wrapper">
 
-    <div class="register-card text-center">
+```
+<div class="register-card">
 
-        <h3 class="register-title">📝 Create Account</h3>
+    <div class="text-center">
 
-        <form method="POST">
-            {% csrf_token %}
+        <h2 class="register-title">
+            🚀 Create Account
+        </h2>
 
-            {{ form.as_p }}
-
-            <div class="d-grid mt-3">
-                <button type="submit"
-                        class="btn btn-modern">
-                    Register
-                </button>
-            </div>
-        </form>
-
-        <div class="text-center mt-4">
-            <small>
-                Already have an account?
-                <br>
-                <a href="{% url 'login' %}">Login</a>
-            </small>
-        </div>
+        <p class="subtitle">
+            Join the Online Examination Portal
+        </p>
 
     </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="password-info">
+
+            <h6>🔒 Password Requirements</h6>
+
+            <ul class="custom-list">
+                <li>Minimum 8 characters</li>
+                <li>Use uppercase and lowercase letters</li>
+                <li>Include at least one number</li>
+                <li>Include at least one special character</li>
+            </ul>
+
+        </div>
+
+        <div class="mt-3">
+
+            <button type="submit" class="btn-modern">
+                Register Account
+            </button>
+
+        </div>
+
+    </form>
+
+    <div class="text-center login-text">
+
+        Already have an account?
+
+        <br>
+
+        <a href="{% url 'login' %}">
+            Login Here
+        </a>
+
+    </div>
+
+</div>
+```
 
 </div>
 

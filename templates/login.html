@@ -2,152 +2,224 @@
 {% block content %}
 
 <style>
-body {
-    margin: 0;
-    padding: 0;
-    background: 
-        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-        url("https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1920");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    font-family: 'Segoe UI', sans-serif;
+
+body{
+    margin:0;
+    padding:0;
+    min-height:100vh;
+    background:
+    linear-gradient(rgba(10,15,30,.75),rgba(10,15,30,.75)),
+    url("https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1920");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    font-family:'Segoe UI',sans-serif;
 }
 
-.login-wrapper {
-    min-height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-wrapper{
+    min-height:65vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:15px;
 }
 
-.login-card {
-    width: 100%;
-    max-width: 420px;
-    padding: 45px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    color: white;
-    transition: 0.4s ease;
-    border: 1px solid rgba(255,255,255,0.2);
+.login-card{
+    width:100%;
+    max-width:450px;
+    padding:30px;
+    border-radius:22px;
+    background:rgba(255,255,255,.10);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    color:white;
+    transition:.3s;
 }
 
-.login-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+.login-card:hover{
+    transform:translateY(-3px);
 }
 
-.login-title {
-    font-weight: bold;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
+.login-title{
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:8px;
 }
 
-.form-control {
-    border-radius: 30px;
-    padding: 14px 20px;
-    border: none;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    font-weight: 500;
+.subtitle{
+    color:#dbeafe;
+    font-size:14px;
+    margin-bottom:25px;
 }
 
-.form-control::placeholder {
-    color: rgba(255,255,255,0.8);
+.form-control{
+    width:100%;
+    padding:13px 16px;
+    border:none;
+    border-radius:14px;
+    background:rgba(255,255,255,.15);
+    color:white;
+    margin-bottom:15px;
+    outline:none;
+    font-size:14px;
 }
 
-.form-control:focus {
-    background: rgba(255,255,255,0.3);
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+.form-control::placeholder{
+    color:rgba(255,255,255,.8);
 }
 
-.btn-modern {
-    border-radius: 30px;
-    padding: 14px;
-    font-weight: 600;
-    background: linear-gradient(135deg,#00c6ff,#0072ff);
-    border: none;
-    transition: 0.3s;
-    box-shadow: 0 10px 25px rgba(0,114,255,0.5);
+.form-control:focus{
+    background:rgba(255,255,255,.20);
+    box-shadow:0 0 12px rgba(0,198,255,.4);
 }
 
-.btn-modern:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 35px rgba(0,114,255,0.7);
+.btn-modern{
+    width:100%;
+    border:none;
+    padding:14px;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:700;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        #00c6ff,
+        #0072ff
+    );
+    transition:.3s;
 }
 
-a {
-    color: #b3de17;
-    font-weight: 500;
+.btn-modern:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(0,114,255,.45);
 }
 
-a:hover {
-    text-decoration: underline;
+.links{
+    margin-top:20px;
+    text-align:center;
 }
 
-.alert {
-    border-radius: 15px;
+.links a{
+    color:#00e5ff;
+    text-decoration:none;
+    font-weight:600;
 }
+
+.links a:hover{
+    text-decoration:underline;
+}
+
+.divider{
+    height:1px;
+    background:rgba(255,255,255,.15);
+    margin:15px 0;
+}
+
+.alert{
+    margin-top:15px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,0,0,.15);
+    color:#fff;
+    text-align:center;
+    padding:10px;
+}
+
+@media(max-width:768px){
+
+    .login-card{
+        max-width:100%;
+        padding:22px;
+    }
+
+    .login-title{
+        font-size:26px;
+    }
+
+    .subtitle{
+        font-size:13px;
+    }
+
+    .form-control{
+        padding:12px;
+    }
+
+    .btn-modern{
+        padding:13px;
+        font-size:15px;
+    }
+}
+
 </style>
 
 <div class="login-wrapper">
-    <div class="login-card text-center">
 
-        <h3 class="login-title">🔐 Login</h3>
+    <div class="login-card">
+
+        <div class="text-center">
+
+            <h2 class="login-title">
+                🔐 Login
+            </h2>
+
+            <p class="subtitle">
+                Welcome Back To Online Examination Portal
+            </p>
+
+        </div>
 
         <form method="POST">
+
             {% csrf_token %}
 
-            <div class="mb-3">
-                <input type="text"
-                       name="username"
-                       class="form-control"
-                       placeholder="Username"
-                       required>
-            </div>
+            <input type="text"
+                   name="username"
+                   class="form-control"
+                   placeholder="Enter Username"
+                   required>
 
-            <div class="mb-3">
-                <input type="password"
-                       name="password"
-                       class="form-control"
-                       placeholder="Password"
-                       required>
-            </div>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Enter Password"
+                   required>
 
-            <div class="d-grid">
-                <button type="submit"
-                        class="btn btn-modern">
-                    Login
-                </button>
-            </div>
+            <button type="submit"
+                    class="btn-modern">
+                Login Account
+            </button>
+
         </form>
-
-        <div class="mt-4">
-            <small>
-                Don't have an account?
-                <br>
-                <a href="{% url 'register' %}">Register</a>
-            </small>
-        </div>
-
-        <div class="mt-2">
-            <a href="{% url 'password_reset' %}">
-                Forgot Password?
-            </a>
-        </div>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-danger mt-3">
+                <div class="alert">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
 
+        <div class="links">
+
+            <p>
+                Don't have an account?
+                <a href="{% url 'register' %}">
+                    Register
+                </a>
+            </p>
+
+            <div class="divider"></div>
+
+            <a href="{% url 'password_reset' %}">
+                Forgot Password?
+            </a>
+
+        </div>
+
     </div>
+
 </div>
 
 {% endblock %}

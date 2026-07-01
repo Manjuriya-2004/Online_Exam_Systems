@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Tasks</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            background:linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b,
+                #334155
+            );
+            min-height:100vh;
+            padding:40px;
+        }
+
+        .container{
+            max-width:1300px;
+            margin:auto;
+        }
+
+        .heading{
+            text-align:center;
+            color:white;
+            font-size:42px;
+            font-weight:bold;
+            margin-bottom:15px;
+        }
+
+        .sub-heading{
+            text-align:center;
+            color:#cbd5e1;
+            margin-bottom:50px;
+        }
+
+        .task-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+            gap:25px;
+        }
+
+        .task-card{
+            background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.15);
+            border-radius:20px;
+            padding:25px;
+            transition:.3s;
+            box-shadow:0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .task-card:hover{
+            transform:translateY(-8px);
+            box-shadow:0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .task-title{
+            color:white;
+            font-size:24px;
+            font-weight:bold;
+            margin-bottom:15px;
+        }
+
+        .task-description{
+            color:#dbeafe;
+            line-height:1.7;
+            margin-bottom:20px;
+        }
+
+        .task-info{
+            margin-bottom:20px;
+        }
+
+        .task-info p{
+            color:#cbd5e1;
+            margin:8px 0;
+        }
+
+        .submit-btn{
+            display:block;
+            width:100%;
+            text-align:center;
+            text-decoration:none;
+            padding:14px;
+            border-radius:12px;
+            font-weight:bold;
+            color:white;
+            background:linear-gradient(
+                135deg,
+                #06b6d4,
+                #2563eb
+            );
+            transition:.3s;
+        }
+
+        .submit-btn:hover{
+            transform:scale(1.03);
+        }
+
+        .empty-box{
+            text-align:center;
+            color:white;
+            padding:80px;
+            background:rgba(255,255,255,0.08);
+            border-radius:20px;
+            backdrop-filter:blur(20px);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1 class="heading">
+        Available Tasks
+    </h1>
+
+    <p class="sub-heading">
+        Complete your assignments and submit before deadline
+    </p>
+
+    {% if tasks %}
+
+    <div class="task-grid">
+
+        {% for task in tasks %}
+
+        <div class="task-card">
+
+            <div class="task-title">
+                {{ task.title }}
+            </div>
+
+            <div class="task-description">
+                {{ task.description }}
+            </div>
+
+            <div class="task-info">
+                <p><strong>Marks :</strong> {{ task.marks }}</p>
+                <p><strong>Deadline :</strong> {{ task.deadline }}</p>
+            </div>
+
+            <a href="{% url 'submit_task' task.id %}" class="submit-btn">
+                Submit Task
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+        <h2>No Tasks Available</h2>
+        <p>Please check back later.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

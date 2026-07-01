@@ -177,7 +177,8 @@
     <tr style="background:#f2f2f2;">
         <th>Title</th>
         <th>Duration</th>
-        <th>Questions</th>
+        <th>MCQ</th>
+        <th>Coding</th>
         <th>Status</th>
         <th>Actions</th>
     </tr>
@@ -186,7 +187,9 @@
     <tr>
         <td>{{ exam.title }}</td>
         <td>{{ exam.duration }} mins</td>
-        <td>{{ exam.question_count }}</td>
+        <!-- <td>{{ exam.question_count }}</td> -->
+        <td>{{ exam.mcq_count }}</td>
+        <td>{{ exam.coding_count }}</td>
 
         <td>
             {% if exam.is_published %}
@@ -203,14 +206,33 @@
         <td>
 
             <a href="{% url 'add_question' exam.id %}"
-               style="color:#007bff;text-decoration:none;">
+               style="color:#0a77ec;text-decoration:none;">
                Add Question
             </a> |
 
+        
+<a href="{% url 'add_coding_question' exam.id %}"
+   style="color:#0ff897;text-decoration:none;">
+   Add Coding
+</a> |
+
+<a href="{% url 'view_mcq_questions' exam.id %}"
+   style="color:hsl(195, 100%, 50%);text-decoration: none;">
+   View MCQ
+</a> |
+
+<a href="{% url 'view_coding_questions' exam.id %}"
+   style="color:#04ff00;text-decoration: none;">
+   View Coding
+</a> |
+
+
+
             <a href="{% url 'edit_exam' exam.id %}"
-               style="color:orange;text-decoration:none;">
+               style="color:#ffa500;text-decoration:none;">
                Edit
             </a> |
+
 
             <a href="{% url 'delete_exam' exam.id %}"
                onclick="return confirm('Delete this exam?')"

@@ -146,24 +146,15 @@ LOGIN_URL = 'login'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-"""
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'csprogramer19@gmail.com'
-EMAIL_HOST_PASSWORD = 'iaff wzoh fivh vgil'"""
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-"""
-import os
+EMAIL_HOST_USER = 'karthiindra2000@gmail.com'
+EMAIL_HOST_PASSWORD = 'oyhf xvju pxat befn'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')"""

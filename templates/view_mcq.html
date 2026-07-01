@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+body{
+    background:
+    linear-gradient(rgba(10,15,30,.90),rgba(10,15,30,.90)),
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+.page-container{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+.page-title{
+    color:white;
+    font-size:42px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.page-subtitle{
+    color:#cbd5e1;
+    margin-bottom:35px;
+}
+
+.question-card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    color:white;
+    box-shadow:0 15px 35px rgba(0,0,0,.3);
+}
+
+.question-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:20px;
+    color:#38bdf8;
+}
+
+.option-box{
+    background:rgba(255,255,255,.08);
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.correct-answer{
+    background:rgba(34,197,94,.15);
+    border-left:4px solid #22c55e;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+.empty-box{
+    background:rgba(255,255,255,.08);
+    padding:40px;
+    text-align:center;
+    border-radius:20px;
+    color:white;
+}
+
+</style>
+
+<div class="page-container">
+
+    <h1 class="page-title">
+        📚 MCQ Questions
+    </h1>
+
+    <p class="page-subtitle">
+        Exam : {{ exam.title }}
+    </p>
+
+    {% if questions %}
+
+        {% for question in questions %}
+
+        <div class="question-card">
+
+            <div class="question-title">
+                Q{{ forloop.counter }}.
+                {{ question.question_text }}
+            </div>
+
+            <div class="option-box">
+                A. {{ question.option_a }}
+            </div>
+
+            <div class="option-box">
+                B. {{ question.option_b }}
+            </div>
+
+            <div class="option-box">
+                C. {{ question.option_c }}
+            </div>
+
+            <div class="option-box">
+                D. {{ question.option_d }}
+            </div>
+
+            <div class="correct-answer">
+                ✅ Correct Answer :
+                <strong>{{ question.correct_option }}</strong>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-box">
+            No MCQ Questions Added Yet
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

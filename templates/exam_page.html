@@ -103,6 +103,97 @@ input[type="radio"]:checked + .option-label {
 
                 {% endfor %}
 
+{% if coding_questions %}
+
+<style>
+.coding-card{
+    background:#ffffff;
+    border-radius:15px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.coding-title{
+    color:#2563eb;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.code-editor{
+    width:100%;
+    min-height:250px;
+    background:#0f172a;
+    color:#22c55e;
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    font-family:Consolas, monospace;
+    font-size:14px;
+    outline:none;
+}
+
+.code-editor:focus{
+    border:2px solid #2563eb;
+}
+
+.sample-box{
+    background:#f8fafc;
+    padding:12px;
+    border-radius:10px;
+    border-left:4px solid #2563eb;
+    margin-bottom:15px;
+}
+</style>
+
+<div class="coding-card">
+
+    <h3 class="coding-title">
+        💻 Coding Questions
+    </h3>
+
+    {% for coding in coding_questions %}
+
+    <div class="mb-4">
+
+        <h5 class="fw-bold">
+            {{ coding.title }}
+        </h5>
+
+        <p>
+            {{ coding.problem_statement }}
+        </p>
+
+        <div class="sample-box">
+            <strong>Sample Input:</strong>
+            <pre>{{ coding.sample_input }}</pre>
+        </div>
+
+        <div class="sample-box">
+            <strong>Sample Output:</strong>
+            <pre>{{ coding.sample_output }}</pre>
+        </div>
+
+        <label class="fw-bold mb-2">
+            Write Your Code
+        </label>
+
+        <textarea
+            name="coding_{{ coding.id }}"
+            class="code-editor"
+            placeholder="Write your Python code here..."></textarea>
+
+    </div>
+
+    <hr>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+
                 <div class="text-end">
                     <button type="submit" 
                             onclick="return confirm('Are you sure you want to submit?')"

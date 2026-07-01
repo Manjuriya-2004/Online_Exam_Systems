@@ -1,8 +1,8 @@
 from django.shortcuts import render , redirect,get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm,QuestionForm,SubjectForm, ExamForm
+from .forms import RegisterForm,QuestionForm,SubjectForm, ExamForm ,QuestionForm,CodingQuestionForm
 from django.contrib.auth.decorators import login_required
-from .models import CustomUser, Subject, Exam, Question,Result
+from .models import CustomUser, Subject, Exam, Question,Result,CodingQuestion, CodingSubmission
 from django.http import HttpResponseForbidden
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
@@ -16,7 +16,6 @@ from django.contrib import messages
 #from .models import Exam, Question
 from django.core.mail import send_mail
 from django.conf import settings
-
 #...Home...#
 
 def home(request):
@@ -183,49 +182,132 @@ def add_question(request, exam_id):
 
 #...start exam...#
 
+@login_required
+def add_coding_question(request, exam_id):
 
+    exam = get_object_or_404(Exam, id=exam_id)
+
+    if request.method == 'POST':
+
+        form = CodingQuestionForm(request.POST)
+
+        print(form.errors)   # temporary debug
+
+        if form.is_valid():
+
+            coding = form.save(commit=False)
+            coding.exam = exam
+            coding.save()
+
+            return redirect('my_exams')
+
+    else:
+        form = CodingQuestionForm()
+
+    return render(
+        request,
+        'add_coding_question.html',
+        {
+            'form': form,
+            'exam': exam
+        }
+    )
 @login_required  #start exam
+
 def start_exam(request, exam_id):
 
     if request.user.role != 'student':
         return HttpResponseForbidden("Not Allowed")
 
-    # safer query (also ensure published only)
-    exam = get_object_or_404(Exam, id=exam_id, is_published=True)
+    exam = get_object_or_404(
+        Exam,
+        id=exam_id,
+        is_published=True
+    )
 
-    # 🔥 SCHEDULING CHECK END
     questions = Question.objects.filter(exam=exam)
 
-    return render(request, 'exam_page.html', {
-        'exam': exam,
-        'questions': questions,
-        'duration': exam.duration
-    })
+    coding_questions = CodingQuestion.objects.filter(
+        exam=exam
+    )
+
+    return render(
+        request,
+        'exam_page.html',
+        {
+            'exam': exam,
+            'questions': questions,
+            'coding_questions': coding_questions,
+            'duration': exam.duration
+        }
+    )
+
+
 
 
 #...submit...#
 
-@login_required   #submit exam
+
+@login_required
 def submit_exam(request, exam_id):
 
     if request.user.role != 'student':
         return HttpResponseForbidden("Not Allowed")
 
     exam = Exam.objects.get(id=exam_id)
+
     questions = Question.objects.filter(exam=exam)
+
     # Prevent duplicate attempt
-    if Result.objects.filter(student=request.user, exam=exam).exists():
-        return HttpResponseForbidden("You already attempted this exam.")
+    if Result.objects.filter(
+        student=request.user,
+        exam=exam
+    ).exists():
+
+        return HttpResponseForbidden(
+            "You already attempted this exam."
+        )
+
     score = 0
+
+    # MCQ Evaluation
     for question in questions:
-        selected = request.POST.get(str(question.id))
+
+        selected = request.POST.get(
+            str(question.id)
+        )
+
         if selected == question.correct_option:
             score += 1
 
-    total = questions.count()
-    percentage = (score / total) * 100 if total > 0 else 0
+    # Coding Submission Save
+    coding_questions = CodingQuestion.objects.filter(
+        exam=exam
+    )
 
-    #  Save result and store object
+    for coding in coding_questions:
+
+        answer = request.POST.get(
+            f'coding_{coding.id}'
+        )
+
+        if answer:
+
+            CodingSubmission.objects.create(
+                student=request.user,
+                coding_question=coding,
+                code=answer
+            )
+
+    total = questions.count()
+
+    percentage = (
+        (score / total) * 100
+        if total > 0
+        else 0
+    )
+
+    # Save Result
     result = Result.objects.create(
         student=request.user,
         exam=exam,
@@ -234,7 +316,12 @@ def submit_exam(request, exam_id):
     )
 
     subject = f"Exam Result - {exam.title}"
-    status = "PASSED" if percentage >= 50 else "FAILED"
+
+    status = (
+        "PASSED"
+        if percentage >= 50
+        else "FAILED"
+    )
 
     message = f"""
 Hello {request.user.username},
@@ -256,12 +343,17 @@ Thank you.
         fail_silently=False,
     )
 
-    return render(request, 'result.html', {
-        'score': score,
-        'total': total,
-        'percentage': percentage,
-        'result': result   
-    })
+    return render(
+        request,
+        'result.html',
+        {
+            'score': score,
+            'total': total,
+            'percentage': percentage,
+            'result': result
+        }
+    )
+
 
 
 #Result...#
@@ -305,15 +397,38 @@ def leaderboard(request):
 """
 
 # my exams -teacher
-@login_required
+'''@login_required
 def my_exams(request):
     exams = Exam.objects.filter(created_by=request.user) \
                         .annotate(question_count=Count('questions'))
 
     return render(request, 'my_exams.html', {
         'exams': exams
-    })
+    })'''
+@login_required
+def my_exams(request):
 
+    exams = Exam.objects.filter(
+        created_by=request.user
+    )
+
+    for exam in exams:
+
+        exam.mcq_count = Question.objects.filter(
+            exam=exam
+        ).count()
+
+        exam.coding_count = CodingQuestion.objects.filter(
+            exam=exam
+        ).count()
+
+    return render(
+        request,
+        'my_exams.html',
+        {
+            'exams': exams
+        }
+    )
 
 #student exam
 @login_required
@@ -442,3 +557,71 @@ def download_result_pdf(request, result_id):
     p.save()
 
     return response
+
+@login_required
+def coding_submissions(request):
+
+    if request.user.role != 'teacher':
+        return HttpResponseForbidden("Not Allowed")
+
+    submissions = CodingSubmission.objects.filter(
+        coding_question__exam__created_by=request.user
+    )
+
+    return render(
+        request,
+        'coding_submissions.html',
+        {
+            'submissions': submissions
+        }
+    )
+@login_required
+def give_marks(request, submission_id):
+
+    submission = get_object_or_404(
+        CodingSubmission,
+        id=submission_id
+    )
+
+    if request.method == "POST":
+
+        submission.score = request.POST.get('score')
+        submission.save()
+
+        return redirect('coding_submissions')
+
+    return render(
+        request,
+        'give_marks.html',
+        {
+            'submission': submission
+        }
+    )
+
+#MCQ view
+@login_required
+def view_mcq(request, exam_id):
+    exam = Exam.objects.get(id=exam_id)
+    questions = Question.objects.filter(exam=exam)
+
+    return render(
+        request,
+        'view_mcq.html',
+        {
+            'exam': exam,
+            'questions': questions
+        }
+    )
+
+def view_coding(request, exam_id):
+    exam = Exam.objects.get(id=exam_id)
+    coding_questions = CodingQuestion.objects.filter(exam=exam)
+
+    return render(
+        request,
+        'view_coding.html',
+        {
+            'exam': exam,
+            'coding_questions': coding_questions
+        }
+    )
