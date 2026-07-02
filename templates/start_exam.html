@@ -172,5 +172,137 @@ h3 {
     </form>
 
 </div>
+<!-- Proctoring Panel -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body text-center">
+        <h5>📷 Exam Monitoring</h5>
+        <p class="mb-2">Camera, Microphone & Fullscreen Required</p>
 
+        <video id="cameraPreview"
+               autoplay
+               muted
+               playsinline
+               style="width:220px;border-radius:15px;border:2px solid rgba(255,255,255,.2);">
+        </video>
+
+        <div class="mt-3">
+            <span class="badge bg-success" id="camStatus">Camera Checking...</span>
+            <span class="badge bg-primary" id="micStatus">Microphone Checking...</span>
+        </div>
+
+        <div class="mt-3">
+            <span class="badge bg-warning text-dark">
+                Warnings:
+                <span id="warningCount">0</span>/3
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+
+let warningCounter = 0;
+const maxWarnings = 3;
+
+const examForm = document.querySelector("form");
+
+function addWarning(message){
+
+    warningCounter++;
+
+    document.getElementById("warningCount").innerText = warningCounter;
+
+    alert(message);
+
+    if(warningCounter >= maxWarnings){
+
+        alert("Exam terminated due to rule violations.");
+
+        examForm.submit();
+    }
+}
+
+/* Camera + Mic Permission */
+navigator.mediaDevices.getUserMedia({
+    video:true,
+    audio:true
+})
+.then(function(stream){
+
+    document.getElementById("cameraPreview").srcObject = stream;
+
+    document.getElementById("camStatus").innerText = "Camera Active";
+
+    document.getElementById("micStatus").innerText = "Mic Active";
+
+})
+.catch(function(){
+
+    alert("Camera and Microphone access is required.");
+
+});
+
+/* Fullscreen */
+function startFullscreen(){
+
+    if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen();
+    }
+
+}
+
+startFullscreen();
+
+/* Fullscreen Exit Detection */
+document.addEventListener("fullscreenchange", function(){
+
+    if(!document.fullscreenElement){
+
+        addWarning("Fullscreen mode exited!");
+
+        startFullscreen();
+    }
+
+});
+
+/* Tab Switch Detection */
+document.addEventListener("visibilitychange", function(){
+
+    if(document.hidden){
+
+        addWarning("Tab switching detected!");
+    }
+
+});
+
+/* Window Blur Detection */
+window.addEventListener("blur", function(){
+
+    addWarning("Window focus lost!");
+});
+
+/* Right Click Disable */
+document.addEventListener("contextmenu", function(e){
+
+    e.preventDefault();
+});
+
+/* Developer Tools Keys */
+document.addEventListener("keydown", function(e){
+
+    if(
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && e.key === "I") ||
+        (e.ctrlKey && e.shiftKey && e.key === "J") ||
+        (e.ctrlKey && e.key === "U")
+    ){
+
+        e.preventDefault();
+
+        addWarning("Restricted action detected!");
+    }
+
+});
+
+</script>
 {% endblock %}
