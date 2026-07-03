@@ -3,7 +3,8 @@ import os
 import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#931g=kj*pmb8xerp30d#ez1%cf^yqrq!-w+mtn@jm718bane%'
-DEBUG = False
+#DEBUG = False
+DEBUG=True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",

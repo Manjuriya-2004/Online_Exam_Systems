@@ -463,3 +463,12 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.exam.title}"
+
+
+class ExamAttempt(models.Model):
+    student = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE
+)
+    exam = models.ForeignKey(Exam,on_delete=models.CASCADE)
+    end_time = models.DateTimeField()

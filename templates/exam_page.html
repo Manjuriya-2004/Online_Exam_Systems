@@ -68,8 +68,7 @@ input[type="radio"]:checked + .option-label {
 
             <form method="POST" action="{% url 'submit_exam' exam.id %}">
                 {% csrf_token %}
-                <input type="hidden" id="exam-duration" value="{{ duration }}">
-
+                <input type="hidden" id="exam-duration" value="{{ remaining_seconds }}">
                 {% for question in questions %}
 
                 <div class="card question-card border-0 p-4 mb-4">
@@ -207,11 +206,46 @@ input[type="radio"]:checked + .option-label {
 
         <!-- Timer Section -->
         <div class="col-lg-4">
-            <div class="timer-box text-center">
-                <h5 class="fw-bold">⏳ Time Remaining</h5>
-                <h3 id="timer" class="text-danger fw-bold mt-2"></h3>
-            </div>
+
+    <div class="timer-box text-center">
+        <h5 class="fw-bold">⏳ Time Remaining</h5>
+        <h3 id="timer" class="text-danger fw-bold mt-2"></h3>
+    </div>
+
+    <div class="timer-box text-center mt-3">
+
+        <h5 class="fw-bold">📷 Live Monitoring</h5>
+
+        <video id="cameraPreview"
+               autoplay
+               muted
+               playsinline
+               width="100%"
+               style="border-radius:10px;background:black;">
+        </video>
+
+        <div class="mt-2">
+            <span class="badge bg-success" id="camStatus">
+                Camera Checking...
+            </span>
         </div>
+
+        <div class="mt-2">
+            <span class="badge bg-primary" id="micStatus">
+                Microphone Checking...
+            </span>
+        </div>
+
+        <div class="mt-2">
+            <span class="badge bg-warning text-dark">
+                Warnings :
+                <span id="warningCount">0</span>/3
+            </span>
+        </div>
+
+    </div>
+
+</div>
 
     </div>
 
@@ -219,8 +253,9 @@ input[type="radio"]:checked + .option-label {
 
 <!-- TIMER SCRIPT -->
 <script>
+
 let durationValue = document.getElementById("exam-duration").value;
-let examDuration = parseInt(durationValue || 0) * 60;
+let examDuration = parseInt(durationValue || 0);
 
 let timerDisplay = document.getElementById("timer");
 let form = document.querySelector("form");
@@ -244,6 +279,115 @@ function updateTimer() {
 
 updateTimer();
 let interval = setInterval(updateTimer, 1000);
+
+
+/* CAMERA + MIC */
+
+let warningCounter = 0;
+const maxWarnings = 3;
+
+function addWarning(message){
+
+    warningCounter++;
+
+    document.getElementById("warningCount").innerText =
+        warningCounter;
+
+    alert(message);
+
+    if(warningCounter >= maxWarnings){
+
+        alert("Exam Auto Submitted");
+
+        form.submit();
+    }
+}
+
+navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+})
+.then(function(stream){
+
+    document.getElementById(
+        "cameraPreview"
+    ).srcObject = stream;
+
+    document.getElementById(
+        "camStatus"
+    ).innerText = "Camera Active";
+
+    document.getElementById(
+        "micStatus"
+    ).innerText = "Microphone Active";
+
+})
+.catch(function(error){
+
+    alert(
+        "Camera and Microphone Permission Required"
+    );
+
+});
+
+/* FULLSCREEN */
+
+function startFullscreen(){
+
+    if(document.documentElement.requestFullscreen){
+
+        document.documentElement.requestFullscreen();
+    }
+}
+
+window.onload = function(){
+
+    startFullscreen();
+
+}
+
+/* TAB SWITCH */
+
+document.addEventListener(
+    "visibilitychange",
+    function(){
+
+        if(document.hidden){
+
+            addWarning(
+                "Tab Switching Detected"
+            );
+        }
+    }
+);
+
+/* FULLSCREEN EXIT */
+
+document.addEventListener(
+    "fullscreenchange",
+    function(){
+
+        if(!document.fullscreenElement){
+
+            addWarning(
+                "Fullscreen Closed"
+            );
+
+            startFullscreen();
+        }
+    }
+);
+
+/* RIGHT CLICK BLOCK */
+
+document.addEventListener(
+    "contextmenu",
+    function(e){
+
+        e.preventDefault();
+    }
+);
+
 </script>
 
 {% endblock %}

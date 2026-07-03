@@ -16,6 +16,9 @@ from django.contrib import messages
 #from .models import Exam, Question
 from django.core.mail import send_mail
 from django.conf import settings
+
+from datetime import timedelta
+from .models import ExamAttempt
 #...Home...#
 
 def home(request):
@@ -212,8 +215,8 @@ def add_coding_question(request, exam_id):
             'exam': exam
         }
     )
-@login_required  #start exam
-
+ #start exam
+@login_required
 def start_exam(request, exam_id):
 
     if request.user.role != 'student':
@@ -231,6 +234,24 @@ def start_exam(request, exam_id):
         exam=exam
     )
 
+    attempt, created = ExamAttempt.objects.get_or_create(
+        student=request.user,
+        exam=exam,
+        defaults={
+            'end_time': timezone.now() + timedelta(
+                minutes=exam.duration
+            )
+        }
+    )
+
+    remaining_seconds = max(
+        0,
+        int(
+            (attempt.end_time - timezone.now())
+            .total_seconds()
+        )
+    )
+
     return render(
         request,
         'exam_page.html',
@@ -238,13 +259,9 @@ def start_exam(request, exam_id):
             'exam': exam,
             'questions': questions,
             'coding_questions': coding_questions,
-            'duration': exam.duration
+            'remaining_seconds': remaining_seconds
         }
     )
-
-
-
-
 #...submit...#
 
 
