@@ -264,7 +264,6 @@ def start_exam(request, exam_id):
     )
 #...submit...#
 
-
 @login_required
 def submit_exam(request, exam_id):
 
@@ -352,13 +351,17 @@ Status: {status}
 Thank you.
 """
 
-    send_mail(
-        subject,
-        message,
-        settings.EMAIL_HOST_USER,
-        [request.user.email],
-        fail_silently=False,
-    )
+    # Email Send (Safe)
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [request.user.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print("Mail Error:", e)
 
     return render(
         request,
@@ -370,6 +373,111 @@ Thank you.
             'result': result
         }
     )
+# @login_required
+# def submit_exam(request, exam_id):
+
+#     if request.user.role != 'student':
+#         return HttpResponseForbidden("Not Allowed")
+
+#     exam = Exam.objects.get(id=exam_id)
+
+#     questions = Question.objects.filter(exam=exam)
+
+#     # Prevent duplicate attempt
+#     if Result.objects.filter(
+#         student=request.user,
+#         exam=exam
+#     ).exists():
+
+#         return HttpResponseForbidden(
+#             "You already attempted this exam."
+#         )
+
+#     score = 0
+
+#     # MCQ Evaluation
+#     for question in questions:
+
+#         selected = request.POST.get(
+#             str(question.id)
+#         )
+
+#         if selected == question.correct_option:
+#             score += 1
+
+#     # Coding Submission Save
+#     coding_questions = CodingQuestion.objects.filter(
+#         exam=exam
+#     )
+
+#     for coding in coding_questions:
+
+#         answer = request.POST.get(
+#             f'coding_{coding.id}'
+#         )
+
+#         if answer:
+
+#             CodingSubmission.objects.create(
+#                 student=request.user,
+#                 coding_question=coding,
+#                 code=answer
+#             )
+
+#     total = questions.count()
+
+#     percentage = (
+#         (score / total) * 100
+#         if total > 0
+#         else 0
+#     )
+
+#     # Save Result
+#     result = Result.objects.create(
+#         student=request.user,
+#         exam=exam,
+#         score=score,
+#         percentage=percentage
+#     )
+
+#     subject = f"Exam Result - {exam.title}"
+
+#     status = (
+#         "PASSED"
+#         if percentage >= 50
+#         else "FAILED"
+#     )
+
+#     message = f"""
+# Hello {request.user.username},
+
+# You have completed the exam: {exam.title}
+
+# Score: {score}/{total}
+# Percentage: {percentage:.2f}%
+# Status: {status}
+
+# Thank you.
+# """
+
+#     send_mail(
+#         subject,
+#         message,
+#         settings.EMAIL_HOST_USER,
+#         [request.user.email],
+#         fail_silently=False,
+#     )
+
+#     return render(
+#         request,
+#         'result.html',
+#         {
+#             'score': score,
+#             'total': total,
+#             'percentage': percentage,
+#             'result': result
+#         }
+#     )
 
 
 
